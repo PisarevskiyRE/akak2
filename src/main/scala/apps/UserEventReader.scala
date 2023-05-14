@@ -9,7 +9,9 @@ import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import akka.stream.scaladsl.{Sink, Source}
 import model._
 
+import scala.concurrent.duration._
 import java.time.temporal.ChronoUnit
+import scala.Console.{BLUE, GREEN, YELLOW}
 import scala.concurrent.Future
 
 
@@ -58,21 +60,24 @@ object UserEventReader {
     .map(_.event)
     .map{
       case UserCreated(user) =>
-        println(s"Пользователь создан $user")
+        println(s"$GREEN Пользователь создан $user")
         insertUserRow(user)
       case UserUpdated(oldUser,newUser) =>
-        println(s"Пользователь обновлен с $oldUser на $newUser")
+        println(s"$YELLOW Пользователь обновлен с $oldUser на $newUser")
         for {
           _ <- deleteUserRow(oldUser)
           _ <- insertUserRow(newUser)
         } yield ()
       case UserDeleted(user) =>
-        println(s"Пользователь удален $user")
+        println(s"$BLUE Пользователь удален $user")
         deleteUserRow(user)
     }
 
 
   def main(args: Array[String]): Unit = {
     eventsForUser.to(Sink.ignore).run()
+
+    import system.executionContext
+    system.scheduler.scheduleOnce(5.seconds, () => system.terminate())
   }
 }

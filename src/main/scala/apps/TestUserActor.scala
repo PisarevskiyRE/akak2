@@ -1,13 +1,13 @@
 package apps
 
-import actor.UserSupervisor
+import actor.UserActor
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import scala.concurrent.duration._
 import model._
 
 
-object TestActors {
+object TestUserActor {
 
   def main(args: Array[String]): Unit = {
 
@@ -21,13 +21,15 @@ object TestActors {
 
     val root = Behaviors.setup[String] { ctx =>
       val logger = ctx.spawn(simpleLogger, "logger")
-      val users = ctx.spawn(UserSupervisor("testUsers"), "testUsers")
+      val users = ctx.spawn(UserActor("testUsers"), "testUsers")
 
-      //users ! CreateUser("User1", "FirstName1", "LastName1", logger)
-      //users ! UpdateUser("8012cbe5-1d1b-4b62-bcea-f3318624608d", "FirstName2", "LastName2", logger )
-      //users ! CreateUser("User2", "FirstName3", "LastName3", logger)
-      //users ! DeleteUser("b90d2168-95bc-41b2-b2a9-1bec6cd374c2", logger)
+     // users ! CreateUser("User1", "FirstName1", "LastName1", logger)
+     // users ! UpdateUser("be240121-b782-40fe-8928-28559a92472c", "FirstName2", "LastName2", logger )
+    //  users ! CreateUser("User2", "FirstName3", "LastName3", logger)
+    //  users ! DeleteUser("cfd746a0-117a-41fc-831c-c99f0d420efa", logger)
+    //  users ! UpdateUser("be240121-b782-40fe-8928-28559a92472c", "FirstName3", "LastName3", logger )
 
+      users ! GetUser("be240121-b782-40fe-8928-28559a92472c", logger)
 
       Behaviors.same
     }

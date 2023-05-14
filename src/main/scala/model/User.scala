@@ -7,6 +7,7 @@ case class User(id: String, login: String, firstName: String, lastName: String){
   def isExists(another: User): Boolean =
     this.login == another.login
 
+  // для работы с сетом вида (set + user1 - user2)
   override def equals(obj: Any): Boolean = obj match {
     case User(`id`, _, _, _) =>  true
     case _ => false

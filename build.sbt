@@ -8,10 +8,9 @@ lazy val root = (project in file("."))
   )
 
 
-lazy val akkaHttpVersion = "10.5.2"
+lazy val akkaHttpVersion = "10.2.7"
 lazy val akkaVersion     = "2.8.2"
 lazy val circeVersion    = "0.14.5"
-lazy val akkaHttpJsonSerializersVersion = "1.39.2"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http"                  % akkaHttpVersion,
@@ -23,8 +22,8 @@ libraryDependencies ++= Seq(
   "io.circe"          %% "circe-core"                 % circeVersion,
   "io.circe"          %% "circe-generic"              % circeVersion,
   "io.circe"          %% "circe-parser"               % circeVersion,
-  "de.heikoseeberger" %% "akka-http-circe"            % akkaHttpJsonSerializersVersion,
-  "de.heikoseeberger" %% "akka-http-jackson"          % akkaHttpJsonSerializersVersion,
+  "de.heikoseeberger" %% "akka-http-circe"            % "1.39.2",
+  "de.heikoseeberger" %% "akka-http-jackson"          % "1.39.2",
   "ch.qos.logback"    % "logback-classic"             % "1.4.6",
 
   // projections tutorial

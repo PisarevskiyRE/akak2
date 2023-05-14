@@ -6,7 +6,7 @@ import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
 import model._
 
 
-object UserSupervisor {
+object UserActor {
 
   case class UserState(users: Set[User])
 
@@ -32,23 +32,21 @@ object UserSupervisor {
 
       // Изменить пользователя
       case UpdateUser(id, firstName, lastName, replyTo) =>
-        val oldUserOption = state.users.find( _.id == id)
-        val newUserOption = oldUserOption
-          .map(u => u.copy(firstName = firstName, lastName = lastName))
-        val userUpdatedEventOption =  oldUserOption.zip(newUserOption)
-          .map(UserUpdated.tupled)
-        val conflictingUserOption = newUserOption.flatMap{ conflict =>
-          state.users.find( u => u.id != id && u.isExists(conflict))
+
+        val oldUserOption: Option[User] = state.users.find( _.id == id)
+        val newUserOption: Option[User] = oldUserOption
+                  .map(u => u.copy(firstName = firstName, lastName = lastName))
+
+        (oldUserOption, newUserOption) match {
+          case (Some(oldU), Some(newU)) =>
+            Effect
+              .persist(UserUpdated(oldU, newU))
+              .thenReply(replyTo)(_ => UserUpdatedResponse(Some(newU)))
+          case _ =>
+            Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно обновить: не найден."))
         }
 
-        (userUpdatedEventOption, conflictingUserOption) match {
-          case (None, _) =>
-            Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно обновить: не найден."))
-          case (_, Some(_)) => //никогда не произойдет из-за UUID
-            Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно обновить: совпадают UUID."))
-          case (Some(newUser), None) =>
-            Effect.persist(newUser).thenReply(replyTo)(_ => newUser)
-        }
+
 
       // Удалить пользователя
       case DeleteUser(id, replyTo) =>
@@ -58,6 +56,16 @@ object UserSupervisor {
             Effect.persist(UserDeleted(user)).thenReply(replyTo)(_ => UserDeletedResponse(Some(user)))
           case None =>
             Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно удалить: не найден."))
+        }
+
+      // получить пользователя
+      case GetUser(id, replyTo) =>
+        val userOption = state.users.find(_.id == id)
+        userOption match {
+          case Some(user) =>
+            Effect.reply(replyTo)(UserGetResponse(Some(user)))
+          case None =>
+            Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно получить: не найден."))
         }
     }
 
