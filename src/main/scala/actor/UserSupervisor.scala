@@ -23,7 +23,7 @@ object UserSupervisor {
         // если нет конфликтов пишем в касандру событие
         if (conflictedUsers.isEmpty){
           Effect.persist(UserCreated(newUser))
-            .thenReply(replyTo)(_ => UserCreated(newUser)) // отвечаем что создали
+            .thenReply(replyTo)(_ => UserCreatedResponse(newUser.id)) // отвечаем что создали
         } else {
           // иначе сообщаем об ошибке
           Effect.reply(replyTo)(UserCommandFailure("Пользователь с таким логином уже существует."))
@@ -55,7 +55,7 @@ object UserSupervisor {
         val userOption = state.users.find(_.id == id)
         userOption match {
           case Some(user) =>
-            Effect.persist(UserDeleted(user)).thenReply(replyTo)(_ => UserDeleted(user))
+            Effect.persist(UserDeleted(user)).thenReply(replyTo)(_ => UserDeletedResponse(Some(user)))
           case None =>
             Effect.reply(replyTo)(UserCommandFailure(s"Пользователя ${id} не возможно удалить: не найден."))
         }
