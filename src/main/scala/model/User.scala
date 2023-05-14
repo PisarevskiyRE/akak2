@@ -1,14 +1,23 @@
 package model
 
-case class User(login: String, firstName: String, lastName: String){
+import java.util.UUID
 
-  def ifExists(another: User) =
+case class User(id: String, login: String, firstName: String, lastName: String){
+
+  def isExists(another: User): Boolean =
     this.login == another.login
 
   override def equals(obj: Any): Boolean = obj match {
-    case User(`login`, _, _) =>  true
+    case User(`id`, _, _, _) =>  true
     case _ => false
   }
 
-  override def hashCode(): Int = login.hashCode
+  override def hashCode(): Int = id.hashCode
+}
+
+object User {
+
+  def make(login: String, firstName: String, lastName: String): User =
+    User(UUID.randomUUID().toString, login, firstName, lastName)
+
 }
