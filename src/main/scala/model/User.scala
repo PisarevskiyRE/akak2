@@ -1,5 +1,7 @@
 package model
 
+import io.circe.Json
+
 import java.util.UUID
 
 case class User(id: String, login: String, firstName: String, lastName: String){

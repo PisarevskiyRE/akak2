@@ -7,7 +7,7 @@ import scala.concurrent.duration._
 import model._
 
 
-object TestUserActor {
+object UserActorSimpleTest {
 
   def main(args: Array[String]): Unit = {
 

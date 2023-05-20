@@ -47,7 +47,6 @@ object UserActor {
         }
 
 
-
       // Удалить пользователя
       case DeleteUser(id, replyTo) =>
         val userOption = state.users.find(_.id == id)

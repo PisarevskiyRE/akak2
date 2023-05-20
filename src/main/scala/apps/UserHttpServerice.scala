@@ -36,10 +36,8 @@ object UsersApp {
 
 
   def main(args: Array[String]): Unit = {
-
     trait RootCommand
     case class RetrieveUsersActor(replyTo: ActorRef[ActorRef[UserCommand]]) extends RootCommand
-
 
     val rootBehavior: Behavior[RootCommand] = Behaviors.setup{ context =>
       val usersActor = context.spawn(UserActor("testUsers"),"testUsers")
@@ -54,10 +52,15 @@ object UsersApp {
     implicit val timeout: Timeout = Timeout(5.seconds)
     implicit val ec: ExecutionContext = system.executionContext
 
-
     val userActorFuture: Future[ActorRef[UserCommand]] = system.ask(replyTo => RetrieveUsersActor(replyTo))
     userActorFuture.foreach(startHttpServer)
 
-
   }
 }
+
+
+/*
+http get localhost:8080/users/be240121-b782-40fe-8928-28559a92472c
+http post localhost:8080/users login=testHTTPuser1 firstName=u1 lastName=u2
+
+ */

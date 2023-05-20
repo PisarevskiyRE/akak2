@@ -54,7 +54,6 @@ object UserEventReader {
     Future.sequence(userFuture :: Nil).map(_ => ())
   }
 
-
   val eventsForUser = readJournal
     .eventsByPersistenceId("testUsers", 0, Long.MaxValue)
     .map(_.event)
@@ -72,7 +71,6 @@ object UserEventReader {
         println(s"$BLUE Пользователь удален $user")
         deleteUserRow(user)
     }
-
 
   def main(args: Array[String]): Unit = {
     eventsForUser.to(Sink.ignore).run()
