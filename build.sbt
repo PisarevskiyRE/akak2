@@ -25,11 +25,9 @@ libraryDependencies ++= Seq(
   "de.heikoseeberger" %% "akka-http-circe"            % "1.39.2",
   "de.heikoseeberger" %% "akka-http-jackson"          % "1.39.2",
   "ch.qos.logback"    % "logback-classic"             % "1.4.6",
-
-  // projections tutorial
-//  "com.typesafe.akka" %% "akka-cluster-sharding-typed" % akkaVersion,
-//  "com.lightbend.akka" %% "akka-projection-core" % "1.4.0",
-//  "com.lightbend.akka" %% "akka-projection-eventsourced" % "1.4.0",
-//  "com.lightbend.akka" %% "akka-projection-cassandra" % "1.4.0"
+  "com.typesafe.akka" %% "akka-cluster-sharding-typed" % akkaVersion,
+  "com.lightbend.akka" %% "akka-projection-core" % "1.4.0",
+  "com.lightbend.akka" %% "akka-projection-eventsourced" % "1.4.0",
+  "com.lightbend.akka" %% "akka-projection-cassandra" % "1.4.0"
 
 )

@@ -14,3 +14,10 @@ println(testJson.asString)
 val t2 = testJson.as[test]
 
 t2
+
+/*
+
+docker ps
+
+docker exec -it  akak2-cassandra-1 cqlsh
+* */
